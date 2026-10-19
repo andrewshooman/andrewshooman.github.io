@@ -1,6 +1,24 @@
 {
- "fetchedAt": 1792433090332,
+ "fetchedAt": 1792435128245,
  "repos": [
+  {
+   "name": "andrewshooman.github.io",
+   "description": "Personal portfolio — AI engineer",
+   "language": null,
+   "languages": {
+    "JavaScript": 75135,
+    "CSS": 19341,
+    "HTML": 7667
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/andrewshooman.github.io",
+   "homepage": "https://andrewshooman.github.io",
+   "pushed": "2026-10-19T18:38:28Z",
+   "created": "2026-10-19T18:38:23Z",
+   "branch": "main"
+  },
   {
    "name": "osrs-flipper",
    "description": "",
