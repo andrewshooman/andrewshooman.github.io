@@ -28,12 +28,19 @@ window.PORTFOLIO = {
       "Lifelong gamer, so most of my projects end up in games.",
     ],
     summary:
-      "Senior Data & AI consultant at EY. I turn complex business problems into Azure-native " +
-      "pipelines, analytics and production ML, with measured results across government, media " +
-      "and finance. Outside work I'm a lifelong gamer, and a lot of my side projects are where " +
-      "games and AI meet. I'd rather run models on my own hardware than rent them from the " +
-      "cloud: local LLMs, quantization and GPU tuning to get everything out of the machine on my desk.",
+      "Senior Data & AI consultant at EY, building Azure pipelines and production ML with " +
+      "measured results. Lifelong gamer, so a lot of my side projects are where games and AI " +
+      "meet. I'd rather run models on my own hardware than rent them: local LLMs, quantization " +
+      "and GPU tuning to get everything out of the machine on my desk.",
   },
+
+  // "At a glance" cards right under the hero: the first thing a recruiter reads.
+  highlights: [
+    { value: "~$90M", title: "Saved for a government client", text: "Predictive-maintenance ML that extends HVAC fleet lifespan (EY)." },
+    { value: "3,400", title: "Items modeled in a live ML product", text: "GE Tycoon: LightGBM forecasts, walk-forward backtests, web app + RuneLite plugin." },
+    { value: "Local", title: "LLM systems on my own hardware", text: "Model routing, LLM evaluation and agents, run on local GPUs before cloud." },
+    { value: "DP-203", title: "Azure certified · 1st place DS challenge", text: "Azure Data Engineer, PL-300 + 4 fundamentals; Carolina Data Science Challenge winner." },
+  ],
 
   // Hero stats. `value` is shown as written; keep them accurate.
   // GitHub project count and last push are added live.
@@ -125,7 +132,17 @@ window.PORTFOLIO = {
     "epl-golf": "EPL Prediction Golf",
   },
 
-  // Repos to hide from the "All projects" grid.
+  // One-line descriptions for repos that have none (or a poor one) on GitHub.
+  descriptions: {
+    "ge-tycoon": "The GE Tycoon model inside RuneLite (Java): next-action cards, GE highlights, profit stats and price graphs.",
+    "talisman": "Football career RPG: simulated league pyramid, stat-driven key moments and procedural SVG art.",
+  },
+
+  // Smaller projects listed under "More projects". Any public repo tagged `portfolio`
+  // on GitHub is added here automatically.
+  more: ["talisman", "ge-tycoon"],
+
+  // Repos never shown.
   hidden: ["andrewshooman.github.io", "MainHub", "my-angular-app", "angular-cli", "rlStats", "plugin-hub", "nicole-portfolio"],
 
   /*
@@ -136,6 +153,7 @@ window.PORTFOLIO = {
   featured: [
     {
       repo: "osrs-flipper",
+      short: "ML trading assistant: LightGBM forecasts fills, returns and risk for ~3,400 items, with a 24/7 paper-trading bot.",
       name: "GE Tycoon",
       kicker: "Applied ML · trading system",
       visual: "market",
@@ -160,6 +178,7 @@ window.PORTFOLIO = {
     },
     {
       repo: "ai-colosseum",
+      short: "LLMs compete by writing strategies in a safe DSL; a deterministic engine fights them and Elo ranks the models.",
       name: "AI Colosseum",
       kicker: "LLM evaluation · agents",
       visual: "arena",
@@ -182,6 +201,7 @@ window.PORTFOLIO = {
     },
     {
       repo: "smartroute-ai",
+      short: "Local-first chat router: a local judge keeps easy prompts on-device and escalates hard ones to the cloud.",
       name: "SmartRoute AI",
       kicker: "LLM infra · cost routing",
       visual: "router",
@@ -203,6 +223,7 @@ window.PORTFOLIO = {
     },
     {
       repo: "sushi-bot-rl",
+      short: "Rocket League agent trained with PPO on a custom 116-feature observation space and 19-action policy.",
       name: "Sushi Bot",
       kicker: "Reinforcement learning",
       visual: "rl",
@@ -222,27 +243,6 @@ window.PORTFOLIO = {
       ],
       stack: ["Python", "PyTorch", "RLGym-PPO", "Rust"],
       tags: ["ml", "ai", "games"],
-    },
-    {
-      repo: "talisman",
-      name: "TALISMAN",
-      kicker: "Game systems · procedural art",
-      visual: "radar",
-      blurb:
-        "A single-player football career RPG. Simulated league pyramid with promotion and " +
-        "relegation, stat-driven key moments, an age curve, injuries and a weighted legacy " +
-        "score — all procedural SVG art, no build step, mobile-first.",
-      highlights: [
-        "Full season sim across a four-division pyramid",
-        "Seeded RNG, daily challenge, Hall of Fame",
-        "Procedural SVG crests, kits, radars and charts",
-      ],
-      metrics: [
-        { label: "divisions", value: "4" },
-        { label: "build step", value: "none" },
-      ],
-      stack: ["JavaScript", "SVG", "CSS"],
-      tags: ["games", "web"],
     },
   ],
 };

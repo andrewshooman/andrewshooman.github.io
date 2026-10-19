@@ -57,76 +57,109 @@
     ctx.font = `${size}px ${C.mono}`; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(txt, x, y);
   };
 
-  /* ---------------- hero: a feed-forward net that reacts to the cursor ---------------- */
+  /* ---------------- hero: a Galton board — beads fall through pegs into a normal distribution ---------------- */
   function hero(canvas) {
-    const mouse = { x: -999, y: -999 };
-    addEventListener("pointermove", (e) => {
-      const r = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
-    });
+    let burst = 0;
+    canvas.closest("section").addEventListener("pointerdown", (e) => { if (!e.target.closest("a,button")) burst += 24; });
     return mount(canvas, () => {
-      const R = rng(7);
-      const layers = [6, 10, 12, 10, 5];
-      let nodes = [], edges = [], pulses = [];
+      const R = 12, rand = Math.random;
+      // binomial pmf for the expected curve
+      const choose = (n, k) => { let c = 1; for (let i = 1; i <= k; i++) c = c * (n - k + i) / i; return c; };
+      const pmf = Array.from({ length: R + 1 }, (_, k) => choose(R, k) / 2 ** R);
+      let L = {}, beads = [], bins = new Array(R + 1).fill(0), acc = 0, drain = 0, total = 0;
+      const peg = (r, k) => ({ x: L.cx + (k - r / 2) * L.sp, y: L.y0 + r * L.rowH });
+      const binX = (k) => L.cx + (k - R / 2) * L.sp;
+      const spawn = () => beads.push({ r: -1, k: 0, t: 0, dir: 0, x: L.cx, y: L.y0 - L.rowH * 1.4, landed: false, glow: 1 });
       return {
         resize(w, h) {
-          nodes = []; edges = [];
-          const x0 = w < 760 ? w * 0.1 : w * 0.42, x1 = w * 0.94;
-          layers.forEach((n, li) => {
-            const x = x0 + (x1 - x0) * (li / (layers.length - 1));
-            const span = h * 0.7, y0 = (h - span) / 2;
-            for (let i = 0; i < n; i++) {
-              nodes.push({ x: x + (R() - 0.5) * 30, y: y0 + span * ((i + 0.5) / n) + (R() - 0.5) * 20, l: li, a: 0, ph: R() * 6.28 });
-            }
-          });
-          const byLayer = (l) => nodes.filter((n) => n.l === l);
-          for (let l = 0; l < layers.length - 1; l++) {
-            const A = byLayer(l), B = byLayer(l + 1);
-            A.forEach((a) => B.forEach((b) => { if (R() < 0.55) edges.push({ a, b, wgt: R() }); }));
-          }
+          const wide = w >= 900;
+          const regionW = wide ? w * 0.46 : w * 0.96;
+          const cx = wide ? w * 0.73 : w * 0.5;
+          const sp = Math.min(regionW / (R + 2), (h * 0.5) / (R * 0.88));
+          const rowH = sp * 0.88, y0 = Math.max(90, h * 0.14);
+          const binTop = y0 + (R - 1) * rowH + sp * 0.7;
+          const binBottom = Math.min(h - 40, binTop + sp * 6.2);
+          const br = Math.max(2.2, sp * 0.17);
+          L = { cx, sp, rowH, y0, binTop, binBottom, br, cap: Math.floor((binBottom - binTop) / (br * 2)) };
+          beads = []; bins.fill(0); total = 0;
         },
         draw(ctx, w, h, t, dt) {
           ctx.clearRect(0, 0, w, h);
-          // spontaneous + cursor-driven activations on the input side
-          if (R() < dt * 2.2) {
-            const ins = nodes.filter((n) => n.l === 0);
-            ins[Math.floor(R() * ins.length)].a = 1;
-          }
-          nodes.forEach((n) => {
-            const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
-            if (d < 110) n.a = Math.min(1, n.a + dt * 4 * (1 - d / 110));
-            if (n.a > 0.85 && !n.fired) {
-              n.fired = true;
-              edges.filter((e) => e.a === n && e.wgt > 0.35).forEach((e) => pulses.push({ e, p: 0, s: 0.6 + R() * 0.8 }));
+          // spawn
+          acc += dt * 10;
+          while (acc > 1) { acc--; spawn(); }
+          while (burst > 0) { burst--; spawn(); beads.at(-1).y -= rand() * L.sp * 3; }
+          // move beads: each row is one coin flip
+          for (const b of beads) {
+            if (b.landed) continue;
+            b.t += dt * 4.2;
+            if (b.t >= 1) {
+              b.t = 0;
+              if (b.r >= 0) b.k += b.dir;
+              b.r++;
+              if (b.r >= R) { b.landed = true; continue; }
+              b.dir = b.r < 0 ? 0 : rand() < 0.5 ? 0 : 1;
             }
-            if (n.a < 0.3) n.fired = false;
-            n.a = Math.max(0, n.a - dt * 0.9);
+            const a = b.r < 0 ? { x: L.cx, y: L.y0 - L.rowH * 1.4 } : peg(b.r, b.k);
+            const nb = b.r < 0 ? peg(0, 0) : b.r + 1 < R ? peg(b.r + 1, b.k + b.dir) : { x: binX(b.k + b.dir), y: L.binTop };
+            const e = b.t;
+            b.x = a.x + (nb.x - a.x) * e;
+            b.y = a.y + (nb.y - a.y) * e * e - Math.sin(Math.PI * e) * L.rowH * (b.r < 0 ? 0 : 0.35) - L.br;
+          }
+          // landed beads drop into their bin
+          beads = beads.filter((b) => {
+            if (!b.landed) return true;
+            if (!drain) { bins[b.k] = Math.min(L.cap, bins[b.k] + 1); total++; }
+            return false;
           });
-          // edges
-          edges.forEach((e) => {
-            const act = Math.max(e.a.a, e.b.a);
-            ctx.strokeStyle = alpha(C.line2, 0.25 + act * 0.5);
-            ctx.lineWidth = 0.6 + e.wgt * 0.6;
-            ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); ctx.stroke();
-          });
-          // pulses
-          pulses = pulses.filter((p) => {
-            p.p += dt * p.s;
-            if (p.p >= 1) { p.e.b.a = Math.min(1, p.e.b.a + 0.5 + p.e.wgt * 0.4); return false; }
-            const x = p.e.a.x + (p.e.b.x - p.e.a.x) * p.p, y = p.e.a.y + (p.e.b.y - p.e.a.y) * p.p;
-            ctx.fillStyle = C.acc; ctx.shadowColor = C.acc; ctx.shadowBlur = 10;
-            ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
-            return true;
-          });
-          // nodes
-          nodes.forEach((n) => {
-            const col = n.l === 0 ? C.acc2 : n.l === layers.length - 1 ? C.acc3 : C.acc;
-            const r = 3.2 + n.a * 3 + Math.sin(t * 2 + n.ph) * 0.4;
-            if (n.a > 0.05) { ctx.fillStyle = alpha(col, n.a * 0.18); ctx.beginPath(); ctx.arc(n.x, n.y, r * 4, 0, 7); ctx.fill(); }
-            ctx.fillStyle = n.a > 0.1 ? col : C.bg;
-            ctx.strokeStyle = alpha(col, 0.5 + n.a * 0.5); ctx.lineWidth = 1.3;
-            ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, 7); ctx.fill(); ctx.stroke();
-          });
+          if (!drain && Math.max(...bins) >= L.cap) drain = 1;
+          if (drain) { drain -= dt * 0.7; if (drain <= 0) { drain = 0; bins.fill(0); total = 0; } }
+          const fade = drain ? Math.max(0, drain) : 1;
+
+          // pegs
+          ctx.fillStyle = alpha(C.muted, 0.55);
+          for (let r = 0; r < R; r++) for (let k = 0; k <= r; k++) {
+            const p = peg(r, k); ctx.beginPath(); ctx.arc(p.x, p.y + L.br * 0.6, Math.max(1.6, L.br * 0.55), 0, 7); ctx.fill();
+          }
+          // bin walls
+          ctx.strokeStyle = alpha(C.line2, 0.8); ctx.lineWidth = 1;
+          for (let k = 0; k <= R + 1; k++) {
+            const x = binX(k) - L.sp / 2;
+            ctx.beginPath(); ctx.moveTo(x, L.binTop); ctx.lineTo(x, L.binBottom); ctx.stroke();
+          }
+          ctx.beginPath(); ctx.moveTo(binX(0) - L.sp / 2, L.binBottom); ctx.lineTo(binX(R) + L.sp / 2, L.binBottom); ctx.stroke();
+          // stacked beads
+          for (let k = 0; k <= R; k++) {
+            const x = binX(k);
+            for (let i = 0; i < bins[k]; i++) {
+              const y = L.binBottom - L.br - i * L.br * 2;
+              ctx.fillStyle = alpha(C.acc, (0.35 + 0.6 * (i / L.cap)) * fade);
+              ctx.beginPath(); ctx.arc(x, y, L.br * 0.92, 0, 7); ctx.fill();
+            }
+          }
+          // expected curve: n · Binomial(12, ½) ≈ Normal(6, 3)
+          if (total > 8) {
+            ctx.strokeStyle = alpha(C.acc3, 0.9 * fade); ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            for (let i = 0; i <= 120; i++) {
+              const kx = -0.5 + (R + 1) * (i / 120);
+              const g = Math.exp(-((kx - R / 2) ** 2) / (2 * (R / 4))) / Math.sqrt(2 * Math.PI * (R / 4));
+              const x = binX(kx), y = L.binBottom - total * g * L.br * 2;
+              i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+            }
+            ctx.stroke(); ctx.setLineDash([]);
+          }
+          // falling beads
+          ctx.fillStyle = C.acc; ctx.shadowColor = C.acc; ctx.shadowBlur = 0;
+          for (const b of beads) { ctx.beginPath(); ctx.arc(b.x, b.y, L.br, 0, 7); ctx.fill(); }
+          ctx.shadowBlur = 0;
+          // annotation
+          const lx = binX(R) + L.sp * 0.9;
+          if (w >= 900) {
+            label(ctx, `n = ${total}`, lx, L.binTop + 14, C.muted, 11);
+            label(ctx, "μ = 6  σ = √3", lx, L.binTop + 30, C.acc3, 11);
+            label(ctx, "12 coin flips / bead", lx, L.binTop + 46, C.dim, 10);
+          }
         },
       };
     });
@@ -246,7 +279,7 @@
         [A, B].forEach((s) => {
           const x = ox + (s.x + 0.5) * cs, y = oy + (s.y + 0.5) * cs, col = C[s.col];
           if (flash > 0) { ctx.strokeStyle = alpha(C.text, flash); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, cs * (0.6 + (1 - flash) * 0.4), 0, 7); ctx.stroke(); }
-          ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 12;
+          ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 0;
           ctx.fillRect(x - cs * 0.32, y - cs * 0.32, cs * 0.64, cs * 0.64); ctx.shadowBlur = 0;
         });
         // panel: rulesets + which rule fired
@@ -257,11 +290,9 @@
           ctx.fillStyle = alpha(C.line2, 0.6); ctx.fillRect(px, y0 + 18, pw, 5);
           ctx.fillStyle = C[s.col]; ctx.fillRect(px, y0 + 18, pw * Math.max(0, s.hp) / 100, 5);
           label(ctx, `hp ${Math.max(0, s.hp).toFixed(0)}  energy ${s.en}`, px, y0 + 38, C.dim, 10);
-          s.rules.forEach((r, i) => {
-            const on = s.fired === i && !winner;
-            const max = Math.floor(pw / 6.4);
-            label(ctx, (on ? "▶ " : "  ") + (r.length > max ? r.slice(0, max - 1) + "…" : r), px, y0 + 58 + i * 16, on ? C.text : C.dim, 10);
-          });
+          // only the rule that fired this tick: keeps the panel readable in a short card
+          const r = s.rules[s.fired], max = Math.floor(pw / 6.4);
+          if (!winner) label(ctx, "▶ " + (r.length > max ? r.slice(0, max - 1) + "…" : r), px, y0 + 56, C.text, 10);
         });
         label(ctx, winner ? `winner: ${winner.name}  ·  Elo updated` : `tick ${tick}  ·  deterministic engine`, 18, h - 14, winner ? C.acc : C.muted, 11);
       },
@@ -290,7 +321,7 @@
         // endpoints
         const node = (n, title, sub, col, count) => {
           ctx.fillStyle = alpha(col, 0.12); ctx.strokeStyle = col; ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.roundRect(n.x - 64, n.y - 26, 128, 52, 10); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.roundRect(n.x - 64, n.y - 26, 128, 52, 2); ctx.fill(); ctx.stroke();
           label(ctx, title, n.x, n.y - 4, col, 12, "center");
           label(ctx, `${sub} · ${count}`, n.x, n.y + 13, C.muted, 10, "center");
         };
@@ -358,14 +389,14 @@
         ctx.clearRect(0, 0, w, h);
         // field
         ctx.strokeStyle = alpha(C.line2, 0.9); ctx.lineWidth = 1.2;
-        ctx.beginPath(); ctx.roundRect(ox, oy, fw, fh, 12); ctx.stroke();
+        ctx.beginPath(); ctx.roundRect(ox, oy, fw, fh, 2); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(ox + fw / 2, oy); ctx.lineTo(ox + fw / 2, oy + fh); ctx.stroke();
         ctx.beginPath(); ctx.arc(ox + fw / 2, oy + fh / 2, fh * 0.16, 0, 7); ctx.stroke();
         ctx.fillStyle = alpha(C.acc3, 0.25); ctx.fillRect(ox + fw - 6, oy + fh * 0.35, 6, fh * 0.3);
         // trail + car + ball
         trail.forEach(([x, y], i) => { ctx.fillStyle = alpha(C.acc, i / trail.length * 0.5); ctx.fillRect(ox + x * fw - 1.5, oy + y * fh - 1.5, 3, 3); });
         ctx.save(); ctx.translate(ox + car.x * fw, oy + car.y * fh); ctx.rotate(car.a);
-        ctx.fillStyle = C.acc; ctx.shadowColor = C.acc; ctx.shadowBlur = 10; ctx.fillRect(-9, -5, 18, 10); ctx.shadowBlur = 0; ctx.restore();
+        ctx.fillStyle = C.acc; ctx.shadowColor = C.acc; ctx.shadowBlur = 0; ctx.fillRect(-9, -5, 18, 10); ctx.shadowBlur = 0; ctx.restore();
         ctx.fillStyle = C.text; ctx.beginPath(); ctx.arc(ox + ball.x * fw, oy + ball.y * fh, 6, 0, 7); ctx.fill();
         label(ctx, `episode ${ep}  ·  obs 116  ·  actions 19`, ox, 22, C.muted, 11);
         // reward curve

@@ -21,7 +21,14 @@
   $("#heroEyebrow").textContent = `${person.title} · ${person.location}`;
   $("#heroName").textContent = person.name;
   $("#heroSummary").textContent = person.summary;
-  $("#ghLink").href = `https://github.com/${P.github}`;
+  $("#heroCta").innerHTML = [
+    `<a class="btn primary" href="mailto:${esc(person.email)}">Email me</a>`,
+    person.linkedin && `<a class="btn" href="${esc(person.linkedin)}" target="_blank" rel="noopener">LinkedIn ↗</a>`,
+    `<a class="btn" href="https://github.com/${P.github}" target="_blank" rel="noopener">GitHub ↗</a>`,
+    person.resume && `<a class="btn ghost" href="${esc(person.resume)}" target="_blank" rel="noopener">Résumé ↓</a>`,
+  ].filter(Boolean).join("");
+  $("#glanceGrid").innerHTML = (P.highlights || []).map((h) => `
+    <div class="glance-card reveal"><b class="mono">${esc(h.value)}</b><h3>${esc(h.title)}</h3><p>${esc(h.text)}</p></div>`).join("");
   window.Visuals.hero($("#net"));
   const statCell = (k, label, value) => `<div><dt>${esc(label)}</dt><dd data-stat="${k}">${esc(value)}</dd></div>`;
   $("#liveStats").innerHTML = (P.heroStats || []).map((s, i) => statCell("s" + i, s.label, s.value)).join("") +
@@ -66,7 +73,7 @@
         Object.assign(m.get(r.name), { gh: r, languages: r.languages, pushed: r.pushed, stars: r.stars, homepage: r.homepage, branch: r.branch });
       } else if (!hidden.has(r.name)) {
         projects.push({
-          repo: r.name, name: (P.names || {})[r.name] || prettify(r.name), description: r.description, gh: r, featured: false,
+          repo: r.name, name: (P.names || {})[r.name] || prettify(r.name), description: (P.descriptions || {})[r.name] || r.description, gh: r, featured: false,
           tags: inferTags(r), skills: [...new Set([...langs.slice(0, 3), ...r.topics.filter((t) => t !== "portfolio")])],
           languages: r.languages, pushed: r.pushed, stars: r.stars, url: r.url, homepage: r.homepage, branch: r.branch,
           weight: r.topics.includes("portfolio") ? 3 : 0, isNew: r.topics.includes("portfolio") && (Date.now() - new Date(r.created)) / 864e5 < 60,
@@ -80,21 +87,20 @@
   /* ---------- featured ---------- */
   function renderFeatured() {
     const root = $("#featured");
-    root.innerHTML = P.featured.map((f, i) => `
+    root.innerHTML = P.featured.map((f) => `
       <article class="feat reveal" data-repo="${esc(f.repo)}">
-        <div class="feat-vis"><canvas aria-label="Animated illustration of ${esc(f.name)}"></canvas><span class="vis-label mono">fig.${i + 1} — live sketch, simulated data</span></div>
+        <div class="feat-vis"><canvas aria-label="Animated illustration of ${esc(f.name)}"></canvas><span class="vis-label mono">live sketch · simulated data</span></div>
         <div class="feat-body">
           <p class="kicker mono">${esc(f.kicker)}</p>
           <h3>${esc(f.name)}</h3>
-          <p class="blurb">${esc(f.blurb)}</p>
-          <ul>${f.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>
+          <p class="blurb">${esc(f.short || f.blurb)}</p>
           <div class="metrics">${(f.metrics || []).map((m) => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>
           <div class="stack">${f.stack.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div>
-          <div class="repo-meta" data-meta></div>
           <div class="feat-actions">
-            <button class="btn primary" data-open="${esc(f.repo)}">Read the deep-dive</button>
+            <button class="btn primary" data-open="${esc(f.repo)}">Details</button>
             ${f.live ? `<a class="btn" href="${esc(f.live)}" target="_blank" rel="noopener">Live app ↗</a>` : ""}
             <a class="btn ghost" href="https://github.com/${P.github}/${esc(f.repo)}" target="_blank" rel="noopener">Code ↗</a>
+            <span class="repo-meta" data-meta></span>
           </div>
         </div>
       </article>`).join("");
@@ -106,63 +112,35 @@
       if (!p || !p.gh) return;
       const top = Object.keys(p.languages || {}).sort((a, b) => p.languages[b] - p.languages[a])[0];
       el.querySelector("[data-meta]").innerHTML =
-        `${top ? `<span><i class="lang-dot" style="background:${GH.langColor(top)}"></i>${esc(top)}</span>` : ""}<span>updated ${ago(p.pushed)}</span>${p.stars ? `<span>★ ${p.stars}</span>` : ""}`;
+        `<span>updated ${ago(p.pushed)}</span>${p.stars ? `<span>★ ${p.stars}</span>` : ""}`;
     });
   }
 
-  /* ---------- grid ---------- */
-  const FILTERS = [["all", "All"], ["ai", "AI / ML"], ["llm", "LLM"], ["games", "Games"], ["web", "Web"], ["data", "Data"]];
-  let filter = "all", query = "";
-  function renderChips() {
-    $("#filterChips").innerHTML = FILTERS.map(([k, l]) => `<button class="chip" role="tab" data-f="${k}" aria-selected="${k === filter}">${l}</button>`).join("");
-  }
-  $("#filterChips").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (!b) return; filter = b.dataset.f; renderChips(); renderGrid(); });
-  $("#repoSearch").addEventListener("input", (e) => { query = e.target.value.toLowerCase(); renderGrid(); });
-
-  function renderGrid() {
-    const list = projects
-      .filter((p) => filter === "all" || (p.tags || []).includes(filter))
-      .filter((p) => !query || `${p.name} ${p.repo} ${p.description} ${(p.skills || []).join(" ")}`.toLowerCase().includes(query))
-      .sort((a, b) => (b.featured - a.featured) || new Date(b.pushed || 0) - new Date(a.pushed || 0));
-    $("#repoGrid").innerHTML = list.length ? list.map((p) => {
-      const top = Object.keys(p.languages || {}).sort((a, b) => p.languages[b] - p.languages[a])[0] || p.gh?.language;
-      const col = GH.langColor(top);
-      const desc = p.featured ? p.blurb.split(/(?<=\.)\s/)[0] : (p.description || p.readmeLead || "No description yet.");
-      return `<button class="card" data-open="${esc(p.repo)}">
-        ${p.featured ? `<span class="badge">featured</span>` : p.isNew ? `<span class="badge">new</span>` : p.offGithub ? `<span class="badge">private</span>` : ""}
-        ${Visuals.glyph(p.repo, col)}
-        <h4>${esc(p.name)}</h4>
-        <p>${esc(desc)}</p>
-        <div class="repo-meta">${top ? `<span><i class="lang-dot" style="background:${col}"></i>${esc(top)}</span>` : ""}${p.pushed ? `<span>${ago(p.pushed)}</span>` : p.offGithub ? `<span>${esc((p.skills || []).slice(0, 3).join(" · "))}</span>` : ""}</div>
-      </button>`;
-    }).join("") : `<p class="empty">// no projects match</p>`;
+  /* ---------- more projects ---------- */
+  function renderMore() {
+    const want = new Set(P.more || []);
+    const list = projects.filter((p) => !p.featured && (want.has(p.repo) || p.offGithub || (p.gh && p.gh.topics.includes("portfolio"))));
+    $("#moreList").innerHTML = list.map((p) => {
+      const desc = p.description || p.readmeLead || "";
+      return `<button class="more-item" data-open="${esc(p.repo)}">
+        <span class="more-name">${esc(p.name)}${p.offGithub ? ` <em>private</em>` : p.isNew ? ` <em>new</em>` : ""}</span>
+        <span class="more-desc">${esc(desc)}</span></button>`;
+    }).join("") + `<a class="more-item all" href="https://github.com/${P.github}?tab=repositories" target="_blank" rel="noopener"><span class="more-name">All repositories ↗</span><span class="more-desc">github.com/${P.github}</span></a>`;
   }
 
   /* ---------- stats + languages ---------- */
   function renderStats(data) {
     const own = data.repos.filter((r) => r.name !== `${P.github}.github.io`);
-    const langs = {};
-    own.forEach((r) => Object.entries(r.languages || {}).forEach(([l, b]) => (langs[l] = (langs[l] || 0) + b)));
     const latest = own.map((r) => r.pushed).sort().at(-1);
     const set = (k, v) => ($(`[data-stat="${k}"]`).textContent = v);
     set("repos", own.length || "—");
     set("push", latest ? ago(latest) : "—");
-
-    // Language mix excludes rendered-notebook HTML that would swamp the chart.
-    delete langs.TeX;
-    const htmlHeavy = own.find((r) => r.name === "stats-final-project");
-    if (htmlHeavy && langs.HTML) langs.HTML -= htmlHeavy.languages.HTML || 0;
-    const entries = Object.entries(langs).filter(([, b]) => b > 0).sort((a, b) => b[1] - a[1]);
-    const sum = entries.reduce((a, [, b]) => a + b, 0);
-    const major = entries.filter(([, b]) => b / sum > 0.012);
-    $("#langBar").innerHTML = major.map(([l, b]) => `<span title="${esc(l)} ${(b / sum * 100).toFixed(1)}%" style="flex-grow:${b};background:${GH.langColor(l)}"></span>`).join("");
-    $("#langLegend").innerHTML = major.map(([l, b]) => `<li><i class="lang-dot" style="background:${GH.langColor(l)}"></i>${esc(l)} ${(b / sum * 100).toFixed(0)}%</li>`).join("");
   }
 
   /* ---------- about + contact ---------- */
   $("#timeline").innerHTML = P.experience.map((x) => `
     <div class="tl-item reveal"><h3>${esc(x.role)}</h3><p class="org">${esc(x.org)} · ${esc(x.period)}</p>
-    <ul>${x.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`).join("");
+    <ul>${x.points.slice(0, 3).map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`).join("");
   $("#skillGroups").innerHTML = Object.entries(P.skills).map(([g, list]) => `
     <div class="skill-group reveal"><h3>${esc(g)}</h3><div class="stack">${list.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div></div>`).join("");
   $("#certs").innerHTML = (P.certifications || []).map((c) => `<li>${esc(c)}</li>`).join("");
@@ -252,12 +230,12 @@
       }
     }));
     updateIndexInfo();
-    renderGrid();
+    renderMore();
   }
 
   const log = $("#termLog");
   const first = person.name.split(" ")[0];
-  const SUGGEST = [`What has ${first} built with LLMs?`, "How does the GE Tycoon model work?", "Reinforcement learning experience?", "How are LLMs evaluated in the Colosseum?", "Professional experience?", `How do I contact ${first}?`];
+  const SUGGEST = [`What has ${first} built with LLMs?`, "How does the GE Tycoon model work?", "Azure experience?", `How do I contact ${first}?`];
   $("#termSuggest").innerHTML = SUGGEST.map((s) => `<button type="button">${esc(s)}</button>`).join("");
   $("#termSuggest").addEventListener("click", (e) => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
   $("#traceToggle").addEventListener("change", (e) => log.classList.toggle("hide-trace", !e.target.checked));
@@ -310,8 +288,6 @@
 
   /* ---------- boot ---------- */
   renderFeatured();
-  renderChips();
-  renderGrid();
   observeReveals();
   fromHash();
 
@@ -319,8 +295,7 @@
     mergeRepos(data.repos);
     renderStats(data);
     fillFeaturedMeta();
-    renderGrid();
-    window.SkillGraph($("#graphCanvas"), $("#graphTip"), { projects, onOpen: openProject });
+    renderMore();
     indexReadmes();
   });
 })();
