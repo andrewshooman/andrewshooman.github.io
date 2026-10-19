@@ -39,7 +39,9 @@ window.PORTFOLIO = {
     { value: "~$90M", title: "Saved for a government client", text: "Predictive-maintenance ML that extends HVAC fleet lifespan (EY)." },
     { value: "3,400", title: "Items modeled in a live ML product", text: "GE Tycoon: LightGBM forecasts, walk-forward backtests, web app + RuneLite plugin." },
     { value: "Local", title: "LLM systems on my own hardware", text: "Model routing, LLM evaluation and agents, run on local GPUs before cloud." },
-    { value: "DP-203", title: "Azure certified · 1st place DS challenge", text: "Azure Data Engineer, PL-300 + 4 fundamentals; Carolina Data Science Challenge winner." },
+    { value: "DP-203", title: "Microsoft Azure certified", text: "Azure Data Engineer Associate and PL-300 Power BI Data Analyst, plus four Microsoft fundamentals certs." },
+    { value: "1st · 2nd", title: "Data science competitions", text: "1st place, Carolina Data Science Challenge (UNC). 2nd place undergrad, NC State Datathon 2021: 100+ students from six universities.",
+      link: { href: "https://sciences.ncsu.edu/news/virtual-datathon-draws-more-than-100-students-from-universities-across-n-c/", label: "NC State article" } },
   ],
 
   // Hero stats. `value` is shown as written; keep them accurate.
@@ -88,8 +90,18 @@ window.PORTFOLIO = {
       period: "2021",
       points: [
         "1st place, Carolina Data Science Challenge.",
-        "2nd place, NC State Data Science Competition.",
+        "2nd place (undergraduate), NC State Datathon 2021.",
       ],
+    },
+  ],
+
+  // Shown under "Competitions" in Experience. `link` is optional.
+  competitions: [
+    { place: "1st place", name: "Carolina Data Science Challenge", where: "UNC Chapel Hill" },
+    {
+      place: "2nd place, undergraduate", name: "NC State Datathon", where: "Mar 2021",
+      text: "Weekend datathon on Raleigh police incident data; 100+ students from six NC universities. Team project: Exploring Neighborhoods With High Societal Crime.",
+      link: "https://sciences.ncsu.edu/news/virtual-datathon-draws-more-than-100-students-from-universities-across-n-c/",
     },
   ],
 

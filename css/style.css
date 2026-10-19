@@ -131,7 +131,7 @@ h1, h2, h3 { font-family: var(--display); font-stretch: 112%; line-height: 1.05;
 .section-head p { grid-column: 2; color: var(--muted); max-width: 680px; margin: 14px 0 0; }
 
 /* ---------- at a glance ---------- */
-.glance { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.glance { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .glance-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 18px 16px; }
 .glance-card b { display: block; font-size: 26px; color: var(--acc); letter-spacing: -0.02em; }
 .glance-card h3 { font-size: 16px; margin: 6px 0 6px; letter-spacing: -0.01em; }
@@ -406,3 +406,15 @@ h1, h2, h3 { font-family: var(--display); font-stretch: 112%; line-height: 1.05;
   .live-stats > div:nth-child(-n+2) { border-bottom: 1px solid var(--line-2); }
   .metrics { align-self: stretch; }
 }
+
+.glance-card { display: flex; flex-direction: column; }
+.glance-link { margin-top: auto; padding-top: 10px; font-size: 11.5px; color: var(--acc); text-decoration: none; text-transform: uppercase; letter-spacing: 0.06em; }
+.glance-link:hover { text-decoration: underline; }
+.comps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; }
+.comps b { color: var(--acc); font-weight: 600; }
+.comps .dim { color: var(--dim); }
+.comps p { margin: 4px 0 4px; color: var(--muted); font-size: 14px; }
+.comps a { font-size: 11.5px; color: var(--acc-2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.06em; }
+@media (max-width: 1100px) { .glance { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) { .glance { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .glance { grid-template-columns: 1fr; } }

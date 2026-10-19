@@ -28,7 +28,7 @@
     person.resume && `<a class="btn ghost" href="${esc(person.resume)}" target="_blank" rel="noopener">Résumé ↓</a>`,
   ].filter(Boolean).join("");
   $("#glanceGrid").innerHTML = (P.highlights || []).map((h) => `
-    <div class="glance-card reveal"><b class="mono">${esc(h.value)}</b><h3>${esc(h.title)}</h3><p>${esc(h.text)}</p></div>`).join("");
+    <div class="glance-card reveal"><b class="mono">${esc(h.value)}</b><h3>${esc(h.title)}</h3><p>${esc(h.text)}</p>${h.link ? `<a class="glance-link mono" href="${esc(h.link.href)}" target="_blank" rel="noopener">${esc(h.link.label)} ↗</a>` : ""}</div>`).join("");
   window.Visuals.hero($("#net"));
   const statCell = (k, label, value) => `<div><dt>${esc(label)}</dt><dd data-stat="${k}">${esc(value)}</dd></div>`;
   $("#liveStats").innerHTML = (P.heroStats || []).map((s, i) => statCell("s" + i, s.label, s.value)).join("") +
@@ -143,6 +143,7 @@
     <ul>${x.points.slice(0, 3).map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`).join("");
   $("#skillGroups").innerHTML = Object.entries(P.skills).map(([g, list]) => `
     <div class="skill-group reveal"><h3>${esc(g)}</h3><div class="stack">${list.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div></div>`).join("");
+  $("#comps").innerHTML = (P.competitions || []).map((c) => `<li><b>${esc(c.place)}</b> · ${esc(c.name)} <span class="dim">(${esc(c.where)})</span>${c.text ? `<p>${esc(c.text)}</p>` : ""}${c.link ? `<a class="mono" href="${esc(c.link)}" target="_blank" rel="noopener">Read the article ↗</a>` : ""}</li>`).join("");
   $("#certs").innerHTML = (P.certifications || []).map((c) => `<li>${esc(c)}</li>`).join("");
   $("#contactLinks").innerHTML = [
     person.email && `<a href="mailto:${esc(person.email)}">${esc(person.email)}</a>`,
@@ -203,6 +204,7 @@
   addDoc({ repo: null, title: "About", section: "Summary", text: person.summary, boost: 1.1 });
   addDoc({ repo: null, title: "About", section: "Contact", text: `You can reach ${person.name} at ${person.email}. ${person.name.split(" ")[0]} is open to full-time AI and ML engineering roles, based in ${person.location}. The code is on GitHub at github.com/${P.github}.` });
   P.experience.forEach((x) => addDoc({ repo: null, title: "Experience", section: `${x.role}, ${x.org}`, text: `${x.role} at ${x.org} (${x.period}). ${x.points.join(" ")}`, boost: 1.1 }));
+  (P.competitions || []).forEach((c) => addDoc({ repo: null, title: "Competitions", section: c.name, text: `${c.place}, ${c.name} (${c.where}). ${c.text || ""}`, boost: 1.1 }));
   if (P.certifications) addDoc({ repo: null, title: "About", section: "Certifications", text: `Microsoft certifications: ${P.certifications.join("; ")}.` });
   addDoc({ repo: null, title: "About", section: "Skills", text: Object.entries(P.skills).map(([g, l]) => `${g} skills: ${l.join(", ")}.`).join(" ") });
   P.featured.forEach((f) => {
