@@ -1,12 +1,12 @@
 {
- "fetchedAt": 1792435128245,
+ "fetchedAt": 1792435225523,
  "repos": [
   {
    "name": "andrewshooman.github.io",
    "description": "Personal portfolio — AI engineer",
-   "language": null,
+   "language": "JavaScript",
    "languages": {
-    "JavaScript": 75135,
+    "JavaScript": 75212,
     "CSS": 19341,
     "HTML": 7667
    },
@@ -15,7 +15,7 @@
    "topics": [],
    "url": "https://github.com/andrewshooman/andrewshooman.github.io",
    "homepage": "https://andrewshooman.github.io",
-   "pushed": "2026-10-19T18:38:28Z",
+   "pushed": "2026-10-19T18:40:08Z",
    "created": "2026-10-19T18:38:23Z",
    "branch": "main"
   },
