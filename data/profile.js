@@ -40,7 +40,7 @@ window.PORTFOLIO = {
     { value: "3,400", title: "Items modeled in a live ML product", text: "GE Tycoon: LightGBM forecasts, walk-forward backtests, web app + RuneLite plugin." },
     { value: "Local", title: "LLM systems on my own hardware", text: "Model routing, LLM evaluation and agents, run on local GPUs before cloud." },
     { value: "DP-203", title: "Microsoft Azure certified", text: "Azure Data Engineer Associate and PL-300 Power BI Data Analyst, plus four Microsoft fundamentals certs." },
-    { value: "1st · 2nd", title: "Data science competitions", text: "1st place, Carolina Data Science Challenge (UNC). 2nd place undergrad, NC State Datathon 2021: 100+ students from six universities.",
+    { value: "1st Place", title: "Carolina Data Science Challenge", text: "Won UNC's data science competition. Also took 2nd place at the 2021 NC State Datathon (100+ students, six universities).",
       link: { href: "https://sciences.ncsu.edu/news/virtual-datathon-draws-more-than-100-students-from-universities-across-n-c/", label: "NC State article" } },
   ],
 
