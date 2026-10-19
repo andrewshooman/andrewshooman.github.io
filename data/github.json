@@ -1,0 +1,243 @@
+{
+ "fetchedAt": 1792433090332,
+ "repos": [
+  {
+   "name": "osrs-flipper",
+   "description": "",
+   "language": "Java",
+   "languages": {
+    "Java": 336793,
+    "JavaScript": 228126,
+    "Python": 119003,
+    "CSS": 14571,
+    "HTML": 3205,
+    "Shell": 2177,
+    "Batchfile": 537
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/osrs-flipper",
+   "homepage": "",
+   "pushed": "2026-10-19T13:57:34Z",
+   "created": "2026-10-12T19:00:28Z",
+   "branch": "main"
+  },
+  {
+   "name": "ge-tycoon",
+   "description": "",
+   "language": "Java",
+   "languages": {
+    "Java": 336793
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/ge-tycoon",
+   "homepage": "",
+   "pushed": "2026-10-19T12:31:52Z",
+   "created": "2026-10-13T18:38:49Z",
+   "branch": "main"
+  },
+  {
+   "name": "talisman",
+   "description": "TALISMAN - a single-player football career RPG. Live a striker's whole career, season by season.",
+   "language": "JavaScript",
+   "languages": {
+    "JavaScript": 185425,
+    "CSS": 29279,
+    "HTML": 1420
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/talisman",
+   "homepage": "",
+   "pushed": "2026-06-24T01:22:23Z",
+   "created": "2026-06-20T23:44:05Z",
+   "branch": "main"
+  },
+  {
+   "name": "ai-colosseum",
+   "description": "AI strategy arena: models author rulesets for autonomous gladiators that a deterministic engine fights. Local Ollama + cloud models.",
+   "language": "Python",
+   "languages": {
+    "Python": 50908
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/ai-colosseum",
+   "homepage": "",
+   "pushed": "2026-06-20T23:55:12Z",
+   "created": "2026-06-20T23:55:10Z",
+   "branch": "main"
+  },
+  {
+   "name": "epl-golf",
+   "description": "",
+   "language": "JavaScript",
+   "languages": {
+    "JavaScript": 20087,
+    "CSS": 7492,
+    "Python": 7316,
+    "HTML": 6865,
+    "Dockerfile": 158
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/epl-golf",
+   "homepage": "",
+   "pushed": "2026-04-24T19:58:21Z",
+   "created": "2026-04-24T19:32:52Z",
+   "branch": "main"
+  },
+  {
+   "name": "smartroute-ai",
+   "description": "Local-first AI chat router with Gemini fallback, persistent memory, and model-call logging",
+   "language": "Python",
+   "languages": {
+    "Python": 35096
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/smartroute-ai",
+   "homepage": "",
+   "pushed": "2026-04-23T23:48:08Z",
+   "created": "2026-04-23T19:52:46Z",
+   "branch": "main"
+  },
+  {
+   "name": "sushi-bot-rl",
+   "description": "",
+   "language": "Rust",
+   "languages": {
+    "Rust": 241053,
+    "Python": 117441
+   },
+   "stars": 1,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/sushi-bot-rl",
+   "homepage": "",
+   "pushed": "2025-09-27T03:36:42Z",
+   "created": "2025-09-27T01:33:11Z",
+   "branch": "main"
+  },
+  {
+   "name": "my-angular-app",
+   "description": "This is a test angular app meant for educational purposes.",
+   "language": "TypeScript",
+   "languages": {
+    "TypeScript": 7523,
+    "JavaScript": 1826,
+    "HTML": 401,
+    "CSS": 80
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/my-angular-app",
+   "homepage": "",
+   "pushed": "2023-07-12T16:01:16Z",
+   "created": "2020-05-28T19:57:47Z",
+   "branch": "master"
+  },
+  {
+   "name": "carolina-handball",
+   "description": "",
+   "language": null,
+   "languages": {},
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/carolina-handball",
+   "homepage": "",
+   "pushed": "2021-08-20T00:11:02Z",
+   "created": "2021-07-08T15:12:47Z",
+   "branch": "main"
+  },
+  {
+   "name": "stats-final-project",
+   "description": "",
+   "language": "HTML",
+   "languages": {
+    "HTML": 924821
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/stats-final-project",
+   "homepage": "",
+   "pushed": "2021-08-19T22:59:58Z",
+   "created": "2021-08-19T22:58:58Z",
+   "branch": "main"
+  },
+  {
+   "name": "COMP562Final",
+   "description": "",
+   "language": "TeX",
+   "languages": {
+    "TeX": 7760,
+    "R": 4844
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/COMP562Final",
+   "homepage": "",
+   "pushed": "2021-05-15T04:16:10Z",
+   "created": "2021-05-11T22:29:48Z",
+   "branch": "main"
+  },
+  {
+   "name": "nicole-portfolio",
+   "description": "",
+   "language": "HTML",
+   "languages": {
+    "HTML": 58951,
+    "CSS": 50431,
+    "SCSS": 29218,
+    "JavaScript": 22763
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/nicole-portfolio",
+   "homepage": "",
+   "pushed": "2020-12-07T18:02:11Z",
+   "created": "2020-12-01T00:43:39Z",
+   "branch": "main"
+  },
+  {
+   "name": "rl-stats",
+   "description": "",
+   "language": null,
+   "languages": {},
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/rl-stats",
+   "homepage": "",
+   "pushed": "2020-11-09T04:49:58Z",
+   "created": "2020-11-09T04:49:57Z",
+   "branch": "main"
+  },
+  {
+   "name": "MainHub",
+   "description": "",
+   "language": null,
+   "languages": {},
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/MainHub",
+   "homepage": "",
+   "pushed": "2019-11-04T22:59:52Z",
+   "created": "2019-11-04T22:59:51Z",
+   "branch": "master"
+  }
+ ]
+}
