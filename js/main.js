@@ -140,7 +140,7 @@
 
   /* ---------- stats + languages ---------- */
   function renderStats(data) {
-    const own = data.repos;
+    const own = data.repos.filter((r) => r.name !== `${P.github}.github.io`);
     const langs = {};
     own.forEach((r) => Object.entries(r.languages || {}).forEach(([l, b]) => (langs[l] = (langs[l] || 0) + b)));
     const latest = own.map((r) => r.pushed).sort().at(-1);

@@ -126,7 +126,7 @@ window.PORTFOLIO = {
   },
 
   // Repos to hide from the "All projects" grid.
-  hidden: ["MainHub", "my-angular-app", "angular-cli", "rlStats", "plugin-hub", "nicole-portfolio"],
+  hidden: ["andrewshooman.github.io", "MainHub", "my-angular-app", "angular-cli", "rlStats", "plugin-hub", "nicole-portfolio"],
 
   /*
    * Featured projects. `repo` must match the GitHub repo name.
