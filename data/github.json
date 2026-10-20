@@ -1,23 +1,24 @@
 {
- "fetchedAt": 1792436074497,
+ "fetchedAt": 1792506080273,
  "repos": [
   {
-   "name": "andrewshooman.github.io",
-   "description": "Personal portfolio — AI engineer",
-   "language": "JavaScript",
+   "name": "spire-ai",
+   "description": "",
+   "language": "Python",
    "languages": {
-    "JavaScript": 71334,
-    "CSS": 27807,
-    "HTML": 6163
+    "Python": 340311,
+    "HTML": 25735,
+    "PowerShell": 9634,
+    "Batchfile": 4847
    },
    "stars": 0,
    "fork": false,
    "topics": [],
-   "url": "https://github.com/andrewshooman/andrewshooman.github.io",
-   "homepage": "https://andrewshooman.github.io",
-   "pushed": "2026-10-19T18:54:18Z",
-   "created": "2026-10-19T18:38:23Z",
-   "branch": "main"
+   "url": "https://github.com/andrewshooman/spire-ai",
+   "homepage": "",
+   "pushed": "2026-10-20T14:06:42Z",
+   "created": "2026-10-19T21:53:13Z",
+   "branch": "master"
   },
   {
    "name": "osrs-flipper",
@@ -37,8 +38,26 @@
    "topics": [],
    "url": "https://github.com/andrewshooman/osrs-flipper",
    "homepage": "",
-   "pushed": "2026-10-19T13:57:34Z",
+   "pushed": "2026-10-20T12:20:04Z",
    "created": "2026-10-12T19:00:28Z",
+   "branch": "main"
+  },
+  {
+   "name": "andrewshooman.github.io",
+   "description": "Personal portfolio — AI engineer",
+   "language": "JavaScript",
+   "languages": {
+    "JavaScript": 71334,
+    "CSS": 27807,
+    "HTML": 6163
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/andrewshooman.github.io",
+   "homepage": "https://andrewshooman.github.io",
+   "pushed": "2026-10-19T18:57:50Z",
+   "created": "2026-10-19T18:38:23Z",
    "branch": "main"
   },
   {
