@@ -1,5 +1,5 @@
 {
- "fetchedAt": 1794857980616,
+ "fetchedAt": 1794940666308,
  "repos": [
   {
    "name": "osrs-flipper",
@@ -19,8 +19,26 @@
    "topics": [],
    "url": "https://github.com/andrewshooman/osrs-flipper",
    "homepage": "",
-   "pushed": "2026-11-16T11:05:48Z",
+   "pushed": "2026-11-17T12:28:10Z",
    "created": "2026-10-12T19:00:28Z",
+   "branch": "main"
+  },
+  {
+   "name": "talisman",
+   "description": "TALISMAN - a single-player football career RPG. Live a striker's whole career, season by season.",
+   "language": "JavaScript",
+   "languages": {
+    "JavaScript": 242756,
+    "CSS": 29279,
+    "HTML": 11324
+   },
+   "stars": 0,
+   "fork": false,
+   "topics": [],
+   "url": "https://github.com/andrewshooman/talisman",
+   "homepage": "",
+   "pushed": "2026-11-17T07:39:57Z",
+   "created": "2026-06-20T23:44:05Z",
    "branch": "main"
   },
   {
@@ -37,7 +55,7 @@
    "topics": [],
    "url": "https://github.com/andrewshooman/andrewshooman.github.io",
    "homepage": "https://andrewshooman.github.io",
-   "pushed": "2026-11-15T16:25:05Z",
+   "pushed": "2026-11-16T19:39:41Z",
    "created": "2026-10-19T18:38:23Z",
    "branch": "main"
   },
@@ -75,24 +93,6 @@
    "homepage": "",
    "pushed": "2026-10-19T12:31:52Z",
    "created": "2026-10-13T18:38:49Z",
-   "branch": "main"
-  },
-  {
-   "name": "talisman",
-   "description": "TALISMAN - a single-player football career RPG. Live a striker's whole career, season by season.",
-   "language": "JavaScript",
-   "languages": {
-    "JavaScript": 185425,
-    "CSS": 29279,
-    "HTML": 1420
-   },
-   "stars": 0,
-   "fork": false,
-   "topics": [],
-   "url": "https://github.com/andrewshooman/talisman",
-   "homepage": "",
-   "pushed": "2026-06-24T01:22:23Z",
-   "created": "2026-06-20T23:44:05Z",
    "branch": "main"
   },
   {
